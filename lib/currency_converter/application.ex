@@ -15,7 +15,11 @@ defmodule CurrencyConverter.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: CurrencyConverter.PubSub},
       # Start the Endpoint (http/https)
-      CurrencyConverterWeb.Endpoint
+      CurrencyConverterWeb.Endpoint,
+      # Start Finch HTTP Client
+      {Finch, name: Finch},
+      # Start Oban
+      {Oban, oban_config()}
       # Start a worker by calling: CurrencyConverter.Worker.start_link(arg)
       # {CurrencyConverter.Worker, arg}
     ]
@@ -32,5 +36,9 @@ defmodule CurrencyConverter.Application do
   def config_change(changed, _new, removed) do
     CurrencyConverterWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp oban_config do
+    Application.fetch_env!(:currency_converter, Oban)
   end
 end

@@ -26,6 +26,17 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Oban Config
+config :currency_converter, Oban,
+  repo: CurrencyConverter.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [exchange_rates: 10]
+
+config :currency_converter, CurrencyConverter.ExchangeRatesWorker,
+  # Free Plan does not support HTTPS
+  base_url: "http://api.exchangeratesapi.io",
+  access_key: "9b3187858df236e468834ce5575989a3"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
