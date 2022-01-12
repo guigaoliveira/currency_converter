@@ -55,16 +55,16 @@ defmodule CurrencyConverter.HTTPClient do
     middlewares = [
       {Tesla.Middleware.BaseUrl, opts[:url] || ""},
       {Tesla.Middleware.Compression, format: opts[:compression] || "gzip"},
-      Tesla.Middleware.JSON,
-      Tesla.Middleware.KeepRequest,
-      Tesla.Middleware.Telemetry,
-      Tesla.Middleware.Logger,
       {Tesla.Middleware.Retry,
        should_retry: fn
          {:ok, %{status: status}} when status in 500..599 -> true
          {:ok, _} -> false
          {:error, _} -> true
-       end}
+       end},
+      Tesla.Middleware.JSON,
+      Tesla.Middleware.KeepRequest,
+      Tesla.Middleware.Telemetry,
+      Tesla.Middleware.Logger
     ]
 
     adapter = {Tesla.Adapter.Finch, name: Finch}
