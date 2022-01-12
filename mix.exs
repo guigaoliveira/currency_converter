@@ -52,7 +52,8 @@ defmodule CurrencyConverter.MixProject do
       {:excoveralls, "~> 0.10.6", only: :test},
       {:tesla, "~> 1.4.4"},
       {:finch, "~> 0.10.1"},
-      {:oban, "~> 2.10.1"}
+      {:oban, "~> 2.10.1"},
+      {:cachex, "~> 3.4.0"}
     ]
   end
 

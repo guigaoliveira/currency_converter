@@ -9,5 +9,6 @@ defmodule CurrencyConverterWeb.Router do
     pipe_through :api
 
     get "/conversion_transactions/:user_id", ConversionTransactionController, :index
+    post "/conversion_transactions/", ConversionTransactionController, :create
   end
 end

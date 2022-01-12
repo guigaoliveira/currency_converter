@@ -10,6 +10,15 @@ defmodule CurrencyConverterWeb.ConversionTransactionView do
     }
   end
 
+  def render("create.json", %{conversion_transaction: conversion_transaction}) do
+    %{
+      data:
+        render_one(conversion_transaction, __MODULE__, "conversion_transaction.json",
+          as: :conversion_transaction
+        )
+    }
+  end
+
   def render("conversion_transaction.json", %{conversion_transaction: conversion_transaction}) do
     Map.take(conversion_transaction, [
       :id,
@@ -17,6 +26,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionView do
       :source_currency,
       :target_currency,
       :source_value,
+      :target_value,
       :exchange_rate,
       :updated_at,
       :inserted_at

@@ -19,9 +19,8 @@ defmodule CurrencyConverter.Application do
       # Start Finch HTTP Client
       {Finch, name: Finch},
       # Start Oban
-      {Oban, oban_config()}
-      # Start a worker by calling: CurrencyConverter.Worker.start_link(arg)
-      # {CurrencyConverter.Worker, arg}
+      {Oban, oban_config()},
+      {Cachex, name: :currency_converter}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

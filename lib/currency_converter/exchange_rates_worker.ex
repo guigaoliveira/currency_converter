@@ -1,7 +1,7 @@
 defmodule CurrencyConverter.ExchangeRatesWorker do
   use Oban.Worker, queue: :exchange_rates
 
-  alias CurrencyConverter.HTTPClient
+  alias CurrencyConverter.{ExchangeRates, HTTPClient}
 
   require Logger
 
@@ -9,22 +9,25 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
   def perform(_job) do
     client = HTTPClient.new(url: config(:base_url))
 
-    case HTTPClient.request(client,
-           url: "/v1/latest",
-           method: :get,
-           query: [
-             access_key: config(:access_key),
-             base: "EUR"
-           ]
-         ) do
-      {:ok, %{body: body}} ->
-        IO.inspect(body)
-        :ok
-
-      {:error, error} ->
-        {:error, error}
+    with {:ok, %{body: body}} <-
+           HTTPClient.request(client,
+             url: "/v1/latest",
+             method: :get,
+             query: [
+               access_key: config(:access_key),
+               base: config(:base_currency)
+             ]
+           ),
+         {:ok, rates} <- parse_result(body) do
+      ExchangeRates.insert(rates, persistence: true)
+      :ok
     end
   end
+
+  defp parse_result(%{"rates" => rates}),
+    do: {:ok, Map.take(rates, config(:supported_currencies))}
+
+  defp parse_result(_body), do: {:error, :exchange_api_schema_changed}
 
   defp config(key) do
     Application.fetch_env!(:currency_converter, __MODULE__) |> Keyword.fetch!(key)

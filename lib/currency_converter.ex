@@ -1,9 +1,13 @@
 defmodule CurrencyConverter do
   @moduledoc """
-  CurrencyConverter keeps the contexts that define your domain
-  and business logic.
-
-  Contexts are also responsible for managing your data, regardless
-  if it comes from the database, an external API or others.
+  Currency Converter Context
   """
+
+  @spec convert(number, number, number) :: %{cross_rate: float, total: float}
+  def convert(value, source_currency_exchange_rate, target_currency_exchange_rate) do
+    cross_rate = source_currency_exchange_rate / target_currency_exchange_rate
+    total = value * cross_rate
+
+    %{total: total, cross_rate: cross_rate}
+  end
 end
