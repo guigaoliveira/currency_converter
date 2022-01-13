@@ -30,7 +30,7 @@ defmodule CurrencyConverter.ExchangeRates do
 
     case Cachex.get!(:currency_converter, "exchange_rates") do
       nil ->
-        {:error, :not_found_rates}
+        {:error, :unavailable_rates}
 
       value ->
         {:ok, Map.get(value, currency)}
@@ -41,6 +41,6 @@ defmodule CurrencyConverter.ExchangeRates do
         "New error when try to get exchange rates from cache, reason: #{inspect(error)}"
       )
 
-      {:error, :not_found_rates}
+      {:error, :unavailable_rates}
   end
 end

@@ -4,6 +4,12 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   alias CurrencyConverter.{ConversionTransactions, ExchangeRates}
   alias CurrencyConverterWeb.Router.Helpers, as: Routes
 
+  setup do
+    Cachex.clear(:currency_converter)
+
+    :ok
+  end
+
   describe "index/2" do
     setup [:create_conversion_transactions]
 
@@ -48,6 +54,24 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
     end
   end
 
+  describe "index/2 error handling" do
+    test "should return a error when user id is not an uuid", %{
+      conn: conn
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, "not_uuid")
+        )
+
+      assert %{
+               "errors" => [
+                 %{"detail" => %{"user_id" => ["must to be an uuid"]}, "status" => 422}
+               ]
+             } = json_response(conn, 422)
+    end
+  end
+
   describe "create/2" do
     setup [:create_exchange_rates]
 
@@ -56,8 +80,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
     } do
       params = %{
         user_id: Ecto.UUID.generate(),
-        source_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
-        target_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
+        source_currency: Enum.random(config_worker(:supported_currencies)),
+        target_currency: Enum.random(config_worker(:supported_currencies)),
         source_value: Decimal.new(to_string(:rand.uniform()))
       }
 
@@ -93,6 +117,38 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
     end
   end
 
+  describe "create/2 error handling" do
+    test "should return a error when try to converter a money when exchange rates no exist in cache",
+         %{
+           conn: conn
+         } do
+      params = %{
+        user_id: Ecto.UUID.generate(),
+        source_currency: Enum.random(config_worker(:supported_currencies)),
+        target_currency: Enum.random(config_worker(:supported_currencies)),
+        source_value: Decimal.new(to_string(:rand.uniform()))
+      }
+
+      conn =
+        post(
+          conn,
+          Routes.conversion_transaction_path(conn, :create),
+          params
+        )
+
+      assert %{
+               "errors" => [
+                 %{
+                   "detail" =>
+                     "It is not possible to create a new conversion transaction" <>
+                       " because we do not have exchange rates yet to perform this operation",
+                   "status" => 500
+                 }
+               ]
+             } = json_response(conn, 500)
+    end
+  end
+
   defp create_conversion_transactions(_) do
     conversion_transactions = fixture(:conversion_transactions)
     %{conversion_transactions: conversion_transactions}
@@ -104,14 +160,14 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   end
 
   defp fixture(:conversion_transactions) do
-    source_currency = Enum.random(["BRL", "USD", "EUR", "JPY"])
+    source_currency = Enum.random(config_worker(:supported_currencies))
     random_decimal = Decimal.new(to_string(:rand.uniform()))
 
     {:ok, struct} =
       ConversionTransactions.create(%{
         user_id: Ecto.UUID.generate(),
         source_currency: source_currency,
-        target_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
+        target_currency: Enum.random(config_worker(:supported_currencies)),
         source_value: Money.new!(random_decimal, source_currency),
         exchange_rate: random_decimal
       })
@@ -120,14 +176,17 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   end
 
   defp fixture(:exchange_rates) do
-    rates = %{
-      "BRL" => to_string(:rand.uniform()),
-      "USD" => to_string(:rand.uniform()),
-      "EUR" => to_string(:rand.uniform()),
-      "JPY" => to_string(:rand.uniform())
-    }
+    rates =
+      Map.new(config_worker(:supported_currencies), fn currency ->
+        {currency, to_string(:rand.uniform())}
+      end)
 
     ExchangeRates.insert(rates)
     rates
+  end
+
+  defp config_worker(key) do
+    Application.fetch_env!(:currency_converter, CurrencyConverter.ExchangeRatesWorker)
+    |> Keyword.fetch!(key)
   end
 end

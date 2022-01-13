@@ -8,6 +8,11 @@ defmodule CurrencyConverter.ExchangeRatesWorkerTest do
     access_key = config_worker(:access_key)
     base_currency = config_worker(:base_currency)
 
+    rates =
+      Map.new(config_worker(:supported_currencies), fn currency ->
+        {currency, to_string(:rand.uniform())}
+      end)
+
     Tesla.Mock.mock(fn
       %{
         url: ^url,
@@ -20,16 +25,11 @@ defmodule CurrencyConverter.ExchangeRatesWorkerTest do
         %Tesla.Env{
           status: 200,
           body: %{
-            "base" => "EUR",
+            "base" => base_currency,
             "date" => Date.to_string(Date.utc_today()),
-            "rates" => %{
-              "BRL" => 6.33,
-              "USD" => 1.14,
-              "YPY" => 131.10,
-              "EUR" => 1
-            },
+            "rates" => rates,
             "success" => true,
-            "timestamp" => 1_642_050_843
+            "timestamp" => DateTime.to_unix(DateTime.utc_now(), :millisecond)
           }
         }
     end)

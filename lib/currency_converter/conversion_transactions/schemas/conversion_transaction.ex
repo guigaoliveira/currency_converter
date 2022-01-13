@@ -7,7 +7,7 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
 
   import Ecto.Changeset, only: [cast: 3, validate_required: 2]
 
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key {:id, Ecto.UUID, autogenerate: true}
 
   @required [
     :user_id,
@@ -18,7 +18,7 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
   ]
 
   schema "conversion_transactions" do
-    field :user_id, :binary_id
+    field :user_id, Ecto.UUID
     field :source_currency, :string
     field :target_currency, :string
     field :source_value, Money.Ecto.Composite.Type
@@ -28,8 +28,8 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
   end
 
   @doc false
-  def changeset(model \\ %__MODULE__{}, params) do
-    model
+  def changeset(struct_or_changeset \\ %__MODULE__{}, params) do
+    struct_or_changeset
     |> cast(params, @required)
     |> validate_required(@required)
   end
