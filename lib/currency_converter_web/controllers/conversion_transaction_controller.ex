@@ -16,6 +16,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
       "target_currency" => target_currency
     } = params
 
+    source_value_decimal = Decimal.new(source_value)
+
     with {:ok, source_currency_exchange_rate} <- ExchangeRates.get(source_currency),
          {:ok, target_currency_exchange_rate} <- ExchangeRates.get(target_currency),
          %{total: target_value, cross_rate: exchange_rate} <-
@@ -26,10 +28,20 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
            ),
          {:ok, conversion_transaction} <-
            params
-           |> Map.put("exchange_rate", exchange_rate)
+           |> Map.merge(%{
+             "exchange_rate" => exchange_rate,
+             "source_value" => Money.new!(source_currency, source_value_decimal)
+           })
            |> ConversionTransactions.create() do
       render(conn, "create.json",
-        conversion_transaction: Map.put(conversion_transaction, :target_value, target_value)
+        conversion_transaction:
+          Map.merge(
+            conversion_transaction,
+            %{
+              target_value: target_value,
+              source_value: source_value_decimal
+            }
+          )
       )
     end
   end

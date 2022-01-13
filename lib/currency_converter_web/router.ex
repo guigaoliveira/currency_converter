@@ -5,7 +5,7 @@ defmodule CurrencyConverterWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", CurrencyConverterWeb do
+  scope "/api/v1", CurrencyConverterWeb do
     pipe_through :api
 
     get "/conversion_transactions/:user_id", ConversionTransactionController, :index

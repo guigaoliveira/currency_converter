@@ -21,8 +21,8 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
     field :user_id, :binary_id
     field :source_currency, :string
     field :target_currency, :string
-    field :source_value, :integer
-    field :exchange_rate, :float
+    field :source_value, Money.Ecto.Composite.Type
+    field :exchange_rate, :decimal
 
     timestamps(type: :naive_datetime_usec)
   end

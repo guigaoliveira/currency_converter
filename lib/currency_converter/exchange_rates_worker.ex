@@ -24,8 +24,12 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
     end
   end
 
-  defp parse_result(%{"rates" => rates}),
-    do: {:ok, Map.take(rates, config(:supported_currencies))}
+  defp parse_result(%{"rates" => rates}) do
+    {:ok,
+     rates
+     |> Map.take(config(:supported_currencies))
+     |> Map.new(fn {k, v} -> {k, to_string(v)} end)}
+  end
 
   defp parse_result(_body), do: {:error, :exchange_api_schema_changed}
 

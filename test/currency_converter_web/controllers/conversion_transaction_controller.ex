@@ -19,6 +19,9 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
         exchange_rate: exchange_rate
       } = conversion_transactions
 
+      exchange_rate_string = Decimal.to_string(exchange_rate)
+      source_value_amount = Decimal.to_string(Money.to_decimal(source_value))
+
       conn =
         get(
           conn,
@@ -32,8 +35,11 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
                    "user_id" => ^user_id,
                    "source_currency" => ^source_currency,
                    "target_currency" => ^target_currency,
-                   "source_value" => ^source_value,
-                   "exchange_rate" => ^exchange_rate,
+                   "source_value" => %{
+                     "amount" => ^source_value_amount,
+                     "currency" => ^source_currency
+                   },
+                   "exchange_rate" => ^exchange_rate_string,
                    "inserted_at" => _inserted_at,
                    "updated_at" => _updated_at
                  }
@@ -52,7 +58,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
         user_id: Ecto.UUID.generate(),
         source_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
         target_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
-        source_value: Enum.random(1..10)
+        source_value: Decimal.new(to_string(:rand.uniform()))
       }
 
       %{
@@ -69,14 +75,16 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
           params
         )
 
+      source_value_amount = to_string(source_value)
+
       assert %{
                "data" => %{
                  "id" => _id,
                  "user_id" => ^user_id,
                  "source_currency" => ^source_currency,
                  "target_currency" => ^target_currency,
-                 "source_value" => ^source_value,
-                 "target_value" => _target_value,
+                 "source_value" => ^source_value_amount,
+                 "target_value" => _target_value_amount,
                  "exchange_rate" => _exchange_rate,
                  "inserted_at" => _inserted_at,
                  "updated_at" => _updated_at
@@ -96,13 +104,16 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   end
 
   defp fixture(:conversion_transactions) do
+    source_currency = Enum.random(["BRL", "USD", "EUR", "JPY"])
+    random_decimal = Decimal.new(to_string(:rand.uniform()))
+
     {:ok, struct} =
       ConversionTransactions.create(%{
         user_id: Ecto.UUID.generate(),
-        source_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
+        source_currency: source_currency,
         target_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
-        source_value: Enum.random(1..10),
-        exchange_rate: :rand.uniform()
+        source_value: Money.new!(random_decimal, source_currency),
+        exchange_rate: random_decimal
       })
 
     struct
@@ -110,10 +121,10 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
 
   defp fixture(:exchange_rates) do
     rates = %{
-      "BRL" => Enum.random(1..10),
-      "USD" => Enum.random(1..10),
-      "EUR" => Enum.random(1..10),
-      "JPY" => Enum.random(1..10)
+      "BRL" => to_string(:rand.uniform()),
+      "USD" => to_string(:rand.uniform()),
+      "EUR" => to_string(:rand.uniform()),
+      "JPY" => to_string(:rand.uniform())
     }
 
     ExchangeRates.insert(rates)

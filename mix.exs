@@ -53,7 +53,10 @@ defmodule CurrencyConverter.MixProject do
       {:tesla, "~> 1.4.4"},
       {:finch, "~> 0.10.1"},
       {:oban, "~> 2.10.1"},
-      {:cachex, "~> 3.4.0"}
+      {:cachex, "~> 3.4.0"},
+      {:ex_money, "~> 5.7.4"},
+      {:ex_money_sql, "~> 1.6.0"},
+      {:decimal, "~> 2.0.0"}
     ]
   end
 
