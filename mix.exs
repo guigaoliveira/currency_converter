@@ -17,6 +17,43 @@ defmodule CurrencyConverter.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+      dialyzer: [
+        plt_add_deps: :apps_direct,
+        plt_add_apps: [
+          :cachex,
+          :credo,
+          :decimal,
+          :ecto,
+          :ecto_sql,
+          :elixir,
+          :ex_money,
+          :ex_money_sql,
+          :finch,
+          :jason,
+          :kernel,
+          :logger,
+          :mix,
+          :oban,
+          :phoenix,
+          :phoenix_ecto,
+          :plug_cowboy,
+          :postgrex,
+          :runtime_tools,
+          :stdlib,
+          :telemetry,
+          :telemetry_metrics,
+          :telemetry_poller,
+          :tesla,
+          :plug,
+          :phoenix_pubsub,
+          :phoenix_view
+        ],
+        list_unused_filters: true,
+        # we use the following opt to change the PLT path
+        # even though the opt is marked as deprecated, this is the doc-recommended way
+        # to do this
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ]
     ]
   end
@@ -48,6 +85,7 @@ defmodule CurrencyConverter.MixProject do
       {:telemetry_poller, "~> 1.0.0"},
       {:jason, "~> 1.3.0"},
       {:plug_cowboy, "~> 2.5.2"},
+      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.6.1", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.14.4", only: :test},
       {:tesla, "~> 1.4.4"},

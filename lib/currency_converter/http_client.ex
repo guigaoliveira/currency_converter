@@ -1,6 +1,6 @@
 defmodule CurrencyConverter.HTTPClient do
   @moduledoc """
-  Http Client
+  HTTP Client
   """
 
   require Logger
@@ -71,10 +71,6 @@ defmodule CurrencyConverter.HTTPClient do
     Tesla.client(middlewares, adapter)
   end
 
-  defp config(key) do
-    Application.fetch_env!(:currency_converter, __MODULE__) |> Keyword.fetch!(key)
-  end
-
   @spec request(Tesla.Client.t(), [{:body | :headers | :method | :opts | :query | :url, any}]) ::
           http_return()
   def request(client, request_opts) do
@@ -125,4 +121,8 @@ defmodule CurrencyConverter.HTTPClient do
 
   defp parse_result({:error, _reason} = err), do: err
   defp parse_result(_), do: {:error, :unexpected_return}
+
+  defp config(key) do
+    Application.fetch_env!(:currency_converter, __MODULE__) |> Keyword.fetch!(key)
+  end
 end

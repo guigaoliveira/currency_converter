@@ -1,0 +1,150 @@
+version: 2.1
+
+executors:
+  test-elixir:
+    docker:
+      - image: &runtime hexpm/elixir:1.12.3-erlang-24.1.3-alpine-3.14.2
+        environment:
+          DOCKER_ENV: test
+          MIX_ENV: test
+          DATABASE_HOST: db
+      - image: postgres:13.3-alpine
+        name: db
+        environment:
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "postgres"
+
+  minimal-elixir:
+    docker:
+      - image: &runtime hexpm/elixir:1.12.3-erlang-24.1.3-alpine-3.14.2
+        environment:
+          MIX_ENV: prod
+
+aliases:
+  - &filter__except_tags
+    branches:
+      only: /.*/
+
+  - &mix_local_hex_and_rebar
+    run: |
+      mix local.hex --force
+      mix local.rebar --force
+  - &mix_deps_get_and_compile
+    run: mix do deps.get, compile --warnings-as-errors
+
+  - &filter__only_tags
+    tags:
+      only: /.*/
+    branches:
+      ignore: /.*/
+
+jobs:
+  build:
+    executor: test-elixir
+    circleci_ip_ranges: true
+    steps:
+      - checkout
+      - run: apk add -U g++
+      - restore_cache:
+          keys:
+            - v1-mixdeps-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-{{ .Branch }}
+            - v1-mixdeps-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-main
+      - unless:
+          condition: << pipeline.git.tag >>
+          steps:
+            - restore_cache:
+                keys:
+                  - v1-build-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-{{ .Branch }}-{{ .Revision }}
+                  - v1-build-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-{{ .Branch }}
+                  - v1-build-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-main
+      - when:
+          condition: << pipeline.git.tag >>
+          steps:
+            - restore_cache:
+                keys:
+                  - v1-build-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-<< pipeline.git.tag >>
+      - *mix_local_hex_and_rebar
+      - *mix_deps_get_and_compile
+      - save_cache:
+          key: v1-mixdeps-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-{{ .Branch }}
+          paths:
+            - deps
+            - ~/.mix
+            - ~/.hex
+      - when:
+          condition: << pipeline.git.tag >>
+          steps:
+            - save_cache:
+                key: v1-build-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-<< pipeline.git.tag >>
+                paths:
+                  - _build
+      - save_cache:
+          key: v1-build-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-{{ .Branch }}
+          paths:
+            - _build
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project
+
+  lint:
+    executor: test-elixir
+    steps:
+      - attach_workspace:
+          at: ~/
+      - *mix_local_hex_and_rebar
+      - run: mix deps.unlock --check-unused
+      - run: mix format --check-formatted
+      - run: mix credo --strict
+
+  dialyzer:
+    executor: test-elixir
+    steps:
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          keys:
+            - v1-plt-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-{{ .Branch }}
+            - v1-plt-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-main
+      - *mix_local_hex_and_rebar
+      - run: mix dialyzer --plt
+      - save_cache:
+          key: v1-plt-cache-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}-{{ .Branch }}
+          paths:
+            - priv/plts
+      - run: mix dialyzer --format short
+
+  test:
+    executor: test-elixir
+    steps:
+      - attach_workspace:
+          at: ~/
+      - *mix_local_hex_and_rebar
+      - run:
+          name: Waiting for Postgres to be ready
+          command: sh -c "while ! nc -z db 5432; do sleep 1; done;"
+      - run: mix do ecto.create, ecto.migrate --quiet --no-compile --pool-size 5
+      - run: mix test --warnings-as-errors
+
+workflows:
+  version: 2
+  build-lint-test:
+    jobs:
+      - build:
+          context: projects
+          filters: *filter__except_tags
+      - lint:
+          context: projects
+          requires:
+            - build
+          filters: *filter__except_tags
+      - dialyzer:
+          context: projects
+          requires:
+            - build
+          filters: *filter__except_tags
+      - test:
+          context: projects
+          requires:
+            - build
+          filters: *filter__except_tags
