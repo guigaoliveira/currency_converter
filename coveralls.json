@@ -1,6 +1,6 @@
 {
-    "skip_files": [
-      "test",
-      "deps"
-    ]
-  }
+  "skip_files": [
+    "test",
+    "deps"
+  ]
+}

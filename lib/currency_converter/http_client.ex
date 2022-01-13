@@ -67,8 +67,12 @@ defmodule CurrencyConverter.HTTPClient do
       Tesla.Middleware.Logger
     ]
 
-    adapter = {Tesla.Adapter.Finch, name: Finch}
+    adapter = config(:adapter)
     Tesla.client(middlewares, adapter)
+  end
+
+  defp config(key) do
+    Application.fetch_env!(:currency_converter, __MODULE__) |> Keyword.fetch!(key)
   end
 
   @spec request(Tesla.Client.t(), [{:body | :headers | :method | :opts | :query | :url, any}]) ::
@@ -84,17 +88,17 @@ defmodule CurrencyConverter.HTTPClient do
   end
 
   defp parse_result({:ok, %{status: 400, body: body}}) do
-    Logger.warn("Bad request. Body: #{inspect(body)}")
+    Logger.warning("Bad request. Body: #{inspect(body)}")
     {:error, {:bad_request, body}}
   end
 
   defp parse_result({:ok, %{status: 422, body: body}}) do
-    Logger.warn("Unprocessable entity. Body: #{inspect(body)}")
+    Logger.warning("Unprocessable entity. Body: #{inspect(body)}")
     {:error, {:unprocessable_entity, body}}
   end
 
   defp parse_result({:ok, %{status: 409, body: body}}) do
-    Logger.warn("Conflict. Body: #{inspect(body)}")
+    Logger.warning("Conflict. Body: #{inspect(body)}")
     {:error, {:conflict, body}}
   end
 

@@ -20,6 +20,8 @@ defmodule CurrencyConverter.DataCase do
 
   using do
     quote do
+      use Oban.Testing, repo: CurrencyConverter.Repo
+
       alias CurrencyConverter.Repo
 
       import Ecto

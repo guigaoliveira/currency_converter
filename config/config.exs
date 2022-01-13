@@ -35,9 +35,14 @@ config :currency_converter, Oban,
 config :currency_converter, CurrencyConverter.ExchangeRatesWorker,
   # Free Plan does not support HTTPS
   base_url: "http://api.exchangeratesapi.io",
+  url_path: "/v1/latest",
   access_key: "9b3187858df236e468834ce5575989a3",
   supported_currencies: ["BRL", "USD", "EUR", "JPY"],
-  base_currency: "EUR"
+  base_currency: "EUR",
+  cache_persistence: true
+
+config :currency_converter, CurrencyConverter.HTTPClient,
+  adapter: {Tesla.Adapter.Finch, name: Finch}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

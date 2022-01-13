@@ -49,7 +49,7 @@ defmodule CurrencyConverter.MixProject do
       {:jason, "~> 1.3.0"},
       {:plug_cowboy, "~> 2.5.2"},
       {:credo, "~> 1.6.1", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.10.6", only: :test},
+      {:excoveralls, "~> 0.14.4", only: :test},
       {:tesla, "~> 1.4.4"},
       {:finch, "~> 0.10.1"},
       {:oban, "~> 2.10.1"},

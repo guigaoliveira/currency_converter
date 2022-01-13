@@ -25,3 +25,7 @@ config :logger, level: :warn
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :currency_converter, CurrencyConverter.HTTPClient, adapter: Tesla.Mock
+
+config :currency_converter, CurrencyConverter.ExchangeRatesWorker, cache_persistence: false

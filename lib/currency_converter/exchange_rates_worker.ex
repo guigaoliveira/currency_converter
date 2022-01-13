@@ -1,17 +1,22 @@
 defmodule CurrencyConverter.ExchangeRatesWorker do
-  use Oban.Worker, queue: :exchange_rates
+  use Oban.Worker,
+    queue: :exchange_rates,
+    max_attempts: 10
 
   alias CurrencyConverter.{ExchangeRates, HTTPClient}
 
   require Logger
 
   @impl Oban.Worker
-  def perform(_job) do
-    client = HTTPClient.new(url: config(:base_url))
+  def perform(%Oban.Job{attempt: attempt}) do
+    url = config(:base_url)
+    client = HTTPClient.new(url: url)
+
+    Logger.info("Trying to extract exchange rates from #{url}, attempt: #{attempt}...")
 
     with {:ok, %{body: body}} <-
            HTTPClient.request(client,
-             url: "/v1/latest",
+             url: config(:url_path),
              method: :get,
              query: [
                access_key: config(:access_key),
@@ -19,8 +24,12 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
              ]
            ),
          {:ok, rates} <- parse_result(body) do
-      ExchangeRates.insert(rates, persistence: true)
+      ExchangeRates.insert(rates, persistence: config(:cache_persistence))
       :ok
+    else
+      error ->
+        Logger.error("New error when try to extract exchange rates, details: #{error}...")
+        error
     end
   end
 
