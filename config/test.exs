@@ -9,7 +9,7 @@ config :currency_converter, CurrencyConverter.Repo,
   username: "postgres",
   password: "postgres",
   database: "currency_converter_test#{System.get_env("MIX_TEST_PARTITION")}",
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_HOST") || "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 

@@ -47,7 +47,8 @@ defmodule CurrencyConverter.MixProject do
           :tesla,
           :plug,
           :phoenix_pubsub,
-          :phoenix_view
+          :phoenix_view,
+          :ex_unit
         ],
         list_unused_filters: true,
         # we use the following opt to change the PLT path

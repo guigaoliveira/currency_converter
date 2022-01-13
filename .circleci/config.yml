@@ -7,9 +7,9 @@ executors:
         environment:
           DOCKER_ENV: test
           MIX_ENV: test
-          DATABASE_HOST: db
+          DATABASE_HOST: postgres
       - image: postgres:13.3-alpine
-        name: db
+        name: postgres
         environment:
           POSTGRES_USER: "postgres"
           POSTGRES_PASSWORD: "postgres"
@@ -24,14 +24,12 @@ aliases:
   - &filter__except_tags
     branches:
       only: /.*/
-
   - &mix_local_hex_and_rebar
     run: |
       mix local.hex --force
       mix local.rebar --force
   - &mix_deps_get_and_compile
     run: mix do deps.get, compile --warnings-as-errors
-
   - &filter__only_tags
     tags:
       only: /.*/
@@ -122,8 +120,8 @@ jobs:
       - *mix_local_hex_and_rebar
       - run:
           name: Waiting for Postgres to be ready
-          command: sh -c "while ! nc -z db 5432; do sleep 1; done;"
-      - run: mix do ecto.create, ecto.migrate --quiet --no-compile --pool-size 5
+          command: sh -c "while ! nc -z postgres 5432; do sleep 1; done;"
+      - run: mix do ecto.create, ecto.migrate --quiet --no-compile
       - run: mix test --warnings-as-errors
 
 workflows:

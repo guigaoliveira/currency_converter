@@ -5,7 +5,7 @@ config :currency_converter, CurrencyConverter.Repo,
   username: "postgres",
   password: "postgres",
   database: "currency_converter_dev",
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_HOST") || "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
