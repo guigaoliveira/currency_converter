@@ -1,4 +1,8 @@
 defmodule CurrencyConverter.ExchangeRatesWorker do
+  @moduledoc """
+  This module is responsible for extracting exchange rates from an external API
+  and adding it to a global cache.
+  """
   use Oban.Worker,
     queue: :exchange_rates,
     max_attempts: 10

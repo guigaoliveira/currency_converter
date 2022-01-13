@@ -1,8 +1,7 @@
 defmodule CurrencyConverter.ExchangeRatesWorkerTest do
   use CurrencyConverter.DataCase
 
-  alias CurrencyConverter.ExchangeRatesWorker
-  alias CurrencyConverter.ExchangeRates
+  alias CurrencyConverter.{ExchangeRates, ExchangeRatesWorker}
 
   setup do
     url = config_worker(:base_url) <> config_worker(:url_path)

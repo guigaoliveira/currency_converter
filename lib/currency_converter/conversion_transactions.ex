@@ -5,8 +5,7 @@ defmodule CurrencyConverter.ConversionTransactions do
 
   import Ecto.Query
 
-  alias CurrencyConverter.Repo
-  alias CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
+  alias CurrencyConverter.{ConversionTransactions.Schemas.ConversionTransaction, Repo}
 
   @doc """
   List all Conversion Transactions by user id
