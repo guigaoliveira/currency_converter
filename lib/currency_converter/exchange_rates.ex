@@ -5,14 +5,16 @@ defmodule CurrencyConverter.ExchangeRates do
 
   require Logger
 
+  # can become environment variables
   @persistence_path "/tmp/exchange_rates_backup"
+  @default_ttl :timer.hours(24)
 
   @doc """
   Insert exchange rates into global cache
   """
   @spec insert(map, Keyword.t()) :: {:ok, boolean} | {:error, boolean}
   def insert(rates, opts \\ []) do
-    Cachex.put(:currency_converter, "exchange_rates", rates)
+    Cachex.put(:currency_converter, "exchange_rates", rates, ttl: opts[:ttl] || @default_ttl)
 
     if opts[:persistence] do
       Cachex.dump(:currency_converter, @persistence_path)

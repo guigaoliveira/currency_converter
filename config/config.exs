@@ -33,7 +33,7 @@ config :currency_converter, Oban,
     Oban.Plugins.Pruner,
     {Oban.Plugins.Cron,
      crontab: [
-       {"@daily", CurrencyConverter.ExchangeRatesWorker}
+       {"0 */12 * * *", CurrencyConverter.ExchangeRatesWorker}
      ]}
   ],
   queues: [exchange_rates: 10]

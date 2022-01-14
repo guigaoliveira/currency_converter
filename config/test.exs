@@ -29,3 +29,5 @@ config :phoenix, :plug_init_mode, :runtime
 config :currency_converter, CurrencyConverter.HTTPClient, adapter: Tesla.Mock
 
 config :currency_converter, CurrencyConverter.ExchangeRatesWorker, cache_persistence: false
+
+config :currency_converter, Oban, plugins: false, queues: false
