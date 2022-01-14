@@ -34,7 +34,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
           Routes.conversion_transaction_path(conn, :index, user_id,
             offset: 0,
             limit: 20,
-            sort: "[\"inserted_at\", \"desc\"]"
+            sort: "[\"inserted_at\", \"desc\"]",
+            inserted_at_end: DateTime.to_iso8601(DateTime.utc_now())
           )
         )
 

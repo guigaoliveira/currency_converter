@@ -16,13 +16,16 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
     field :target_currency, :string
     field :source_value, :decimal
 
+    # pagination
     field :offset, :integer, default: 0
     field :limit, :integer, default: 20
 
+    # filters
     field :inserted_at, :utc_datetime_usec
     field :inserted_at_start, :utc_datetime_usec
     field :inserted_at_end, :utc_datetime_usec
 
+    # sorting
     field :sort, SortType
   end
 
@@ -33,7 +36,7 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
       :user_id
     ]
 
-    optional_fields = [:limit, :offset]
+    optional_fields = [:limit, :offset, :sort, :inserted_at, :inserted_at_start, :inserted_at_end]
 
     struct_or_changeset
     |> cast(attrs, required_fields ++ optional_fields)
