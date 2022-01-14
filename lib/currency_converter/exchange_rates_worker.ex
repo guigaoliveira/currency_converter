@@ -5,7 +5,7 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
   """
   use Oban.Worker,
     queue: :exchange_rates,
-    max_attempts: 10
+    max_attempts: 1
 
   alias CurrencyConverter.{ExchangeRates, HTTPClient}
 
