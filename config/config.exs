@@ -29,7 +29,13 @@ config :phoenix, :json_library, Jason
 # Oban Config
 config :currency_converter, Oban,
   repo: CurrencyConverter.Repo,
-  plugins: [Oban.Plugins.Pruner],
+  plugins: [
+    Oban.Plugins.Pruner,
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"@daily", CurrencyConverter.ExchangeRatesWorker}
+     ]}
+  ],
   queues: [exchange_rates: 10]
 
 config :currency_converter, CurrencyConverter.ExchangeRatesWorker,
