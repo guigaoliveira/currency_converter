@@ -7,11 +7,23 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
 
   import Ecto.Changeset
 
+  alias CurrencyConverter.Utils.EctoTypes.SortType
+  alias CurrencyConverter.Utils.Validations.SortValidation
+
   embedded_schema do
     field :user_id, :binary
     field :source_currency, :string
     field :target_currency, :string
     field :source_value, :decimal
+
+    field :offset, :integer, default: 0
+    field :limit, :integer, default: 20
+
+    field :inserted_at, :utc_datetime_usec
+    field :inserted_at_start, :utc_datetime_usec
+    field :inserted_at_end, :utc_datetime_usec
+
+    field :sort, SortType
   end
 
   @spec validate_index(Ecto.Schema.t() | Ecto.Changeset.t() | {map, map}, map) ::
@@ -21,9 +33,15 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
       :user_id
     ]
 
+    optional_fields = [:limit, :offset]
+
     struct_or_changeset
-    |> cast_and_validate_required_fields(attrs, required_fields)
+    |> cast(attrs, required_fields ++ optional_fields)
+    |> validate_required(required_fields)
+    |> validate_number(:offset, greater_than_or_equal_to: 0)
+    |> validate_number(:limit, greater_than: 0, less_than_or_equal_to: 100)
     |> validate_uuid(:user_id)
+    |> SortValidation.validate(["inserted_at"])
   end
 
   @spec validate_create(Ecto.Schema.t() | Ecto.Changeset.t() | {map, map}, map) ::
@@ -39,15 +57,11 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
       :source_value
     ]
 
-    cast_and_validate_required_fields(struct_or_changeset, attrs, required_fields)
-    |> validate_currency(:source_currency)
-    |> validate_currency(:target_currency)
-  end
-
-  defp cast_and_validate_required_fields(struct_or_changeset, attrs, required_fields) do
     struct_or_changeset
     |> cast(attrs, required_fields)
     |> validate_required(required_fields)
+    |> validate_currency(:source_currency)
+    |> validate_currency(:target_currency)
   end
 
   defp validate_uuid(%Ecto.Changeset{} = changeset, field) do

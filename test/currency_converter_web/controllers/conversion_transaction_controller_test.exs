@@ -31,7 +31,11 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
       conn =
         get(
           conn,
-          Routes.conversion_transaction_path(conn, :index, user_id)
+          Routes.conversion_transaction_path(conn, :index, user_id,
+            offset: 0,
+            limit: 20,
+            sort: "[\"inserted_at\", \"desc\"]"
+          )
         )
 
       assert %{

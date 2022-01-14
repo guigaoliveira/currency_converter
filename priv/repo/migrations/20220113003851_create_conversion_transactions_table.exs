@@ -10,7 +10,7 @@ defmodule CurrencyConverter.Repo.Migrations.CreateConversionTransactionsTable do
       add :source_value, :money_with_currency
       add :exchange_rate, :decimal
 
-      timestamps(type: :naive_datetime_usec)
+      timestamps(type: :utc_datetime_usec)
     end
   end
 end

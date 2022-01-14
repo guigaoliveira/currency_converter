@@ -6,16 +6,18 @@ defmodule CurrencyConverter.ConversionTransactions do
   import Ecto.Query
 
   alias CurrencyConverter.{ConversionTransactions.Schemas.ConversionTransaction, Repo}
+  alias CurrencyConverter.Utils.DataManipulation
 
   @doc """
   List all Conversion Transactions by user id
   """
-  def all_by_user(%{user_id: user_id}) do
+  def all_by_user(params) do
     fields = ConversionTransaction.__schema__(:fields)
 
     ConversionTransaction
     |> select([p], map(p, ^fields))
-    |> where(user_id: ^user_id)
+    |> where(user_id: ^params.user_id)
+    |> DataManipulation.apply_operations(params)
     |> Repo.all()
   end
 

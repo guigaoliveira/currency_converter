@@ -6,16 +6,21 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
 
   action_fallback CurrencyConverterWeb.FallbackController
 
+  @doc """
+  List all conversion transactions by user id
+  """
   def index(conn, params) do
-    with %{valid?: true} = validation_result <-
-           ConversionTransactionInput.validate_index(params),
-         %{user_id: user_id} <- validation_result.changes do
-      conversion_transactions = ConversionTransactions.all_by_user(%{user_id: user_id})
+    with %{valid?: true, changes: params} <-
+           ConversionTransactionInput.validate_index(params) do
+      conversion_transactions = ConversionTransactions.all_by_user(params)
 
       render(conn, "index.json", conversion_transactions: conversion_transactions)
     end
   end
 
+  @doc """
+  Creates a new conversion transaction
+  """
   def create(conn, params) do
     with %{valid?: true, changes: params} <-
            ConversionTransactionInput.validate_create(params),

@@ -24,7 +24,7 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
     field :source_value, Money.Ecto.Composite.Type
     field :exchange_rate, :decimal
 
-    timestamps(type: :naive_datetime_usec)
+    timestamps(type: :utc_datetime_usec)
   end
 
   @doc false
