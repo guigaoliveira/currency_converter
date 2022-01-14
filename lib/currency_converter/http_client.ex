@@ -74,7 +74,7 @@ defmodule CurrencyConverter.HTTPClient do
   end
 
   defp parse_result({:ok, %{status: status, body: body}}) do
-    Logger.warning("#{__MODULE__}: New error when #{status}, body: #{inspect(body)}")
+    Logger.warning("#{__MODULE__}: New error with status #{status}, body: #{inspect(body)}")
     {:error, :unavailable}
   end
 
