@@ -117,7 +117,7 @@ jobs:
           command: sh -c "while ! nc -z postgres 5432; do sleep 1; done;"
       - run: 
           name: Install git
-          command: apk update && apk upgrade &&  apk add --no-cache bash git openssh
+          command: apk update && apk upgrade && apk add --no-cache bash git openssh
       - run: mix do ecto.create, ecto.migrate --quiet --no-compile
       - run: mix test --warnings-as-errors
       - run: mix coveralls.circle
