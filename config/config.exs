@@ -42,7 +42,7 @@ config :currency_converter, CurrencyConverter.ExchangeRatesWorker,
   # Free Plan does not support HTTPS
   base_url: "http://api.exchangeratesapi.io",
   url_path: "/v1/latest",
-  access_key: "9b3187858df236e468834ce5575989a3",
+  access_key: System.get_env("EXCHANGE_RATES_API_ACCESS_KEY"),
   supported_currencies: ["BRL", "USD", "EUR", "JPY"],
   base_currency: "EUR",
   cache_persistence: true
