@@ -112,8 +112,14 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
                  "user_id" => ^user_id,
                  "source_currency" => ^source_currency,
                  "target_currency" => ^target_currency,
-                 "source_value" => ^source_value_amount,
-                 "target_value" => _target_value_amount,
+                 "source_value" => %{
+                   "amount" => ^source_value_amount,
+                   "currency" => ^source_currency
+                 },
+                 "target_value" => %{
+                   "amount" => _target_value_amount,
+                   "currency" => ^target_currency
+                 },
                  "exchange_rate" => _exchange_rate,
                  "inserted_at" => _inserted_at,
                  "updated_at" => _updated_at

@@ -30,18 +30,19 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
              params.source_currency,
              params.target_currency
            ),
+         source_value <- Money.new!(params.source_currency, params.source_value),
          {:ok, conversion_transaction} <-
            params
            |> Map.merge(%{
              exchange_rate: exchange_rate,
-             source_value: Money.new!(params.source_currency, params.source_value)
+             source_value: source_value
            })
            |> ConversionTransactions.create() do
       render(conn, "create.json",
         conversion_transaction:
           Map.merge(
             conversion_transaction,
-            %{target_value: target_value, source_value: params.source_value}
+            %{target_value: target_value, source_value: source_value}
           )
       )
     else
