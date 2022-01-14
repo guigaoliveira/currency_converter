@@ -1,0 +1,146 @@
+FORMAT: A1
+HOST: http://localhost:4000/api/v1
+
+# Currency Converter API
+
+This is an API to convert money amounts between currencies. 
+Supported currencies: BRL, USD, EUR, JPY.
+
+# Group Conversion Transactions
+
+Resources related to conversion transactions in the API.
+
+## Conversion Transactions [/conversion_transactions/{user_id}{?offset}{?limit}{?inserted_at}{?inserted_at_start}{?inserted_at_end}{?sort}]
+
+### List conversion transactions by user id [GET]
++ Parameters
+
+    + offset: 0 (number, optional) - The (zero-based) offset of the first item in the collection to return
+        + Default: 0
+        
+    + limit: 20 (number, optional) - The maximum number of entries to return. If the value exceeds the maximum, then the maximum value (100) will be used.
+        + Default: 20
+        
+    + `inserted_at`: `2022-01-14T01:09:46.139857Z` (string, optional) - Filter results with `inserted_at` equal or greater than to this param
+  
+    + `inserted_at_start`: `2022-01-14T01:09:46.139857Z` (string, optional) - Filter results with `inserted_at` equal or greater than to this param
+        
+    + `inserted_at_end`: `2022-01-14T01:09:46.139857Z` (string, optional) - Filter results with `inserted_at` equal or less than to this param
+        
+    + sort: `["inserted_at", "desc"]` (string, optional) - Sort by a field. Format: ["field", "order"]. Allowed fields: `inserted_at`. Allowed orders: `asc` or `desc`. 
+        + Default: `["inserted_at", "desc"]`
+        
++ Response 200 (application/json)
+
+    + Attributes (ConversionTransactionsResponse)
+
++ Response 422 (application/json)
+
+    + Attributes (ValidationErrors)
+
+## Conversion Transaction [/conversion_transactions/]
+
+### Create conversion transaction [POST]
++ Request Create a conversion transaction
+
+    + Headers
+
+            Accept: application/json
+            Content-Type: application/json
+            
+    + Attributes (ConversionTransactionRequest)
+    + Schema 
+    
+            {
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "source_currency": {
+                  "type": "string",
+                  "maxLength": 3
+                },
+                "target_currency": {
+                  "type": "string",
+                  "maxLength": 3,
+                  "enum": [
+                    "BRL",
+                    "USD",
+                    "EUR",
+                    "JPY"
+                    ]
+                },
+                "source_value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "user_id",
+                "source_currency",
+                "target_currency",
+                "source_value"
+              ]
+            }
+    
++ Response 200 (application/json)
+        
+    + Attributes (ConversionTransactionResponse)
+    
++ Response 422 (application/json)
+
+    + Attributes (ValidationErrors)
+    
++ Response 500 (application/json)
+
+    + Attributes (ServerErrors)
+    
+    
+## Data structures
+
+### ConversionTransactionCommon 
++ user_id: `4184f25e-cdb4-4829-9274-912389195172` (string, required)
++ source_currency: BRL (string, required)
++ target_currency: USD (string, required)
+
+### ConversionTransactionRequest (ConversionTransactionCommon)
++ source_value: 1.2 (string, required)
+
+### ConversionTransactionsResponse
++ data (array[ConversionTransaction])
+
+### ConversionTransactionResponse
++ data (ConversionTransactionCreate)
+
+### ConversionTransaction (ConversionTransactionRequest)
++ id: `810b43d0-fc0d-4199-8a79-25b471c880bf` (string, required)
++ exchange_rate: 5.52929 (string, required)
++ inserted_at: `2022-01-14T01:09:46.139857Z` (string, required)
++ updated_at:  `2022-01-14T01:09:46.139857Z` (string, required)
++ source_value (Money, required)
+
+### ConversionTransactionCreate (ConversionTransaction)
++ target_value (Money, required) 
+
+### Money 
++ amount: 1.2 (string)
++ currency: BRL (string)
+
+### ServerErrors
++ errors (array[ServerError])
+
+### ServerError
++ detail: error message (string, required)
++ status: 500 (string, optional)
+
+### ValidationErrors
++ errors (array[ValidationError])
+
+### ValidationError
++ detail (ValidationErrorDetail, required)
++ status: 422 (string, optional)
+
+### ValidationErrorDetail
++ field: can't be blank (array[string])
