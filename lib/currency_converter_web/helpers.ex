@@ -13,7 +13,7 @@ defmodule CurrencyConverterWeb.Helpers do
     conn
     |> put_status(status)
     |> put_view(CurrencyConverterWeb.ErrorView)
-    |> render(:"#{status_code}", detail: detail, status: status_code)
+    |> render("#{status_code}.json", detail: detail, status: status_code)
     |> halt()
   end
 end

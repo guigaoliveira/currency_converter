@@ -89,6 +89,7 @@ defmodule CurrencyConverter.MixProject do
       {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.6.1", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.14.4", only: :test},
+      {:sobelow, "~> 0.11.1", only: :dev},
       {:tesla, "~> 1.4.4"},
       {:finch, "~> 0.10.1"},
       {:oban, "~> 2.10.1"},

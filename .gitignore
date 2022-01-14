@@ -23,3 +23,5 @@ erl_crash.dump
 currency_converter-*.tar
 
 /priv/plts/
+
+.sobelow
