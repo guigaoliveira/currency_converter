@@ -1,6 +1,7 @@
 # Conversor de moedas
 
-![image](https://img.shields.io/circleci/build/github/guigaoliveira/currency_converter/main?token=343f12bc81a3d93b7c268b8d7ab719bb0f755d0a)
+![Circle CI Build](https://img.shields.io/circleci/build/github/guigaoliveira/currency_converter/main?token=343f12bc81a3d93b7c268b8d7ab719bb0f755d0a) 
+[![Coverage Status](https://coveralls.io/repos/github/guigaoliveira/currency_converter/badge.svg?t=PJyCB8)](https://coveralls.io/github/guigaoliveira/currency_converter)
 
 Esse projeto tem como objetivo expor uma API REST que permite a conversão de valores em moedas diferentes. As taxas de câmbio são atualizadas a partir de uma API externa. As moedas suportadas atualmente são BRL, USD, EUR E JPY.
 
