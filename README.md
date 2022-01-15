@@ -21,7 +21,9 @@ Para executar o servidor do Phoenix:
 - Entre na pasta do projeto
 - Instale as dependências com `mix deps.get`
 - Crie e migre o banco de dados com `mix ecto.setup`
-- Execute `mix phx.server` para startar o servidor
+- Execute `EXCHANGE_RATES_API_ACCESS_KEY=your_access_key_here mix phx.server` para startar o servidor
+
+A variavel de ambiente `EXCHANGE_RATES_API_ACCESS_KEY` é a chave `access_key` da obtida no site `https://exchangeratesapi.io/`, sem ela não podemos acessar a API deles.
 
 A servidor estará rodando em [http://localhost:4000](http://localhost:4000). A versão 1 da API tem host em
 [http://localhost:4000/api/v1/](http://localhost:4000/api/v1/).
@@ -49,3 +51,8 @@ O projeto usa o Phoenix Framework para criar a API REST e expor os endpoints nec
   - Para o cache distribuído
 - Ex_money, Ex_money_sql, Decimal
   - Para lidar com a representação de dinheiro em código e banco de dados
+
+## Considerações
+
+- Datas/horas por padrão são salvos com timezone UTC
+- Foi assumido que o id do usuário dos endpoints de listagem e criação de transações de conversão é um UUID.

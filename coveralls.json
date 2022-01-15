@@ -1,6 +1,9 @@
 {
   "skip_files": [
     "test",
-    "deps"
+    "deps",
+    "lib/currency_converter_web.ex",
+    "lib/currency_converter_web/endpoint.ex",
+    "lib/currency_converter/repo.ex"
   ]
 }

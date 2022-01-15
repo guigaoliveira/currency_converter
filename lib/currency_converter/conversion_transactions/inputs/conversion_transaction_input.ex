@@ -29,9 +29,9 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
     field :sort, SortType
   end
 
-  @spec validate_index(Ecto.Schema.t() | Ecto.Changeset.t() | {map, map}, map) ::
-          Ecto.Changeset.t()
-  def validate_index(struct_or_changeset \\ %__MODULE__{}, attrs) do
+  @spec cast_and_validate_index(Ecto.Schema.t() | Ecto.Changeset.t() | {map, map}, map) ::
+          {:ok, map} | Ecto.Changeset.t()
+  def cast_and_validate_index(struct_or_changeset \\ %__MODULE__{}, attrs) do
     required_fields = [
       :user_id
     ]
@@ -44,15 +44,13 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
     |> validate_number(:offset, greater_than_or_equal_to: 0)
     |> validate_number(:limit, greater_than: 0, less_than_or_equal_to: 100)
     |> validate_uuid(:user_id)
-    |> SortValidation.validate(["inserted_at"])
+    |> SortValidation.apply(["inserted_at"])
+    |> merge_params_and_changes_if_valid()
   end
 
-  @spec validate_create(Ecto.Schema.t() | Ecto.Changeset.t() | {map, map}, map) ::
-          Ecto.Changeset.t()
-  @doc """
-  Validates creation of a conversion transaction
-  """
-  def validate_create(struct_or_changeset \\ %__MODULE__{}, attrs) do
+  @spec cast_and_validate_create(Ecto.Schema.t() | Ecto.Changeset.t() | {map, map}, map) ::
+          {:ok, map} | Ecto.Changeset.t()
+  def cast_and_validate_create(struct_or_changeset \\ %__MODULE__{}, attrs) do
     required_fields = [
       :user_id,
       :source_currency,
@@ -65,6 +63,7 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
     |> validate_required(required_fields)
     |> validate_currency(:source_currency)
     |> validate_currency(:target_currency)
+    |> merge_params_and_changes_if_valid()
   end
 
   defp validate_uuid(%Ecto.Changeset{} = changeset, field) do
@@ -81,6 +80,17 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
     changeset
     |> validate_length(field, max: 3)
     |> validate_inclusion(field, config_worker(:supported_currencies))
+  end
+
+  defp merge_params_and_changes_if_valid(changeset) do
+    if changeset.valid? do
+      {:ok,
+       changeset.params
+       |> Map.new(fn {k, v} -> {String.to_existing_atom(k), v} end)
+       |> Map.merge(changeset.changes)}
+    else
+      changeset
+    end
   end
 
   defp config_worker(key) do

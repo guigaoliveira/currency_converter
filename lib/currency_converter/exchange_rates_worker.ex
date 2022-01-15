@@ -16,7 +16,9 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
     url = config(:base_url)
     client = HTTPClient.new(url: url)
 
-    Logger.info("Trying to extract exchange rates from #{url}, attempt: #{attempt}...")
+    Logger.info(
+      "Trying to extract exchange rates from #{inspect(url)}, attempt: #{inspect(attempt)}..."
+    )
 
     with {:ok, %{body: body}} <-
            HTTPClient.request(client,
@@ -32,7 +34,10 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
       :ok
     else
       error ->
-        Logger.error("New error when try to extract exchange rates, details: #{error}...")
+        Logger.error(
+          "New error when try to extract exchange rates, details: #{inspect(error)}..."
+        )
+
         error
     end
   end

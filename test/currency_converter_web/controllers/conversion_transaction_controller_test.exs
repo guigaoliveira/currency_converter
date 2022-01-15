@@ -11,20 +11,19 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   end
 
   describe "index/2" do
-    setup [:create_conversion_transactions]
+    setup [:create_conversion_transaction]
 
     test "list all conversion transactions by user id", %{
       conn: conn,
-      conversion_transactions: conversion_transactions
-    } do
-      %{
+      conversion_transaction: %{
         user_id: user_id,
         source_currency: source_currency,
         target_currency: target_currency,
         source_value: source_value,
-        exchange_rate: exchange_rate
-      } = conversion_transactions
-
+        exchange_rate: exchange_rate,
+        inserted_at: inserted_at
+      }
+    } do
       exchange_rate_string = Decimal.to_string(exchange_rate)
       source_value_amount = Decimal.to_string(Money.to_decimal(source_value))
 
@@ -34,7 +33,9 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
           Routes.conversion_transaction_path(conn, :index, user_id,
             offset: 0,
             limit: 20,
-            sort: "[\"inserted_at\", \"desc\"]",
+            sort: ~S(["inserted_at","desc"]),
+            inserted_at: DateTime.to_iso8601(inserted_at),
+            inserted_at_start: DateTime.to_iso8601(inserted_at),
             inserted_at_end: DateTime.to_iso8601(DateTime.utc_now())
           )
         )
@@ -60,6 +61,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   end
 
   describe "index/2 error handling" do
+    setup [:create_conversion_transaction]
+
     test "should return a error when user id is not an uuid", %{
       conn: conn
     } do
@@ -74,6 +77,117 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
                  %{"detail" => %{"user_id" => ["must to be an uuid"]}, "status" => 422}
                ]
              } = json_response(conn, 422)
+    end
+
+    test "should return a error when pass invalid format to sort param", %{
+      conn: conn,
+      conversion_transaction: %{user_id: user_id}
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, user_id, sort: 0)
+        )
+
+      assert %{"errors" => [%{"detail" => %{"sort" => ["is invalid"]}, "status" => 422}]} =
+               json_response(conn, 422)
+    end
+
+    test "should return a error when pass a invalid field to sort param", %{
+      conn: conn,
+      conversion_transaction: %{user_id: user_id}
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, user_id,
+            sort: ~S(["field_not_exist", "desc"])
+          )
+        )
+
+      assert %{
+               "errors" => [
+                 %{
+                   "detail" => %{"sort" => ["Invalid sort field 'field_not_exist'"]},
+                   "status" => 422
+                 }
+               ]
+             } = json_response(conn, 422)
+    end
+
+    test "should return a error when pass a invalid order to sort param", %{
+      conn: conn,
+      conversion_transaction: %{user_id: user_id}
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, user_id,
+            sort: ~S(["inserted_at", "order_not_exist"])
+          )
+        )
+
+      assert %{"errors" => [%{"detail" => %{"sort" => ["is invalid"]}, "status" => 422}]} =
+               json_response(conn, 422)
+    end
+
+    test "should return a error when pass invalid value to inserted_at param", %{
+      conn: conn,
+      conversion_transaction: %{user_id: user_id}
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, user_id, inserted_at: :not_a_date)
+        )
+
+      assert %{"errors" => [%{"detail" => %{"inserted_at" => ["is invalid"]}, "status" => 422}]} =
+               json_response(conn, 422)
+    end
+
+    test "should return a error when pass invalid value to inserted_at_start param", %{
+      conn: conn,
+      conversion_transaction: %{user_id: user_id}
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, user_id, inserted_at_start: :not_a_date)
+        )
+
+      assert %{
+               "errors" => [
+                 %{"detail" => %{"inserted_at_start" => ["is invalid"]}, "status" => 422}
+               ]
+             } = json_response(conn, 422)
+    end
+
+    test "should return a error when pass invalid value to offset param", %{
+      conn: conn,
+      conversion_transaction: %{user_id: user_id}
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, user_id, offset: :not_a_number)
+        )
+
+      assert %{"errors" => [%{"detail" => %{"offset" => ["is invalid"]}, "status" => 422}]} =
+               json_response(conn, 422)
+    end
+
+    test "should return a error when pass invalid value to limit param", %{
+      conn: conn,
+      conversion_transaction: %{user_id: user_id}
+    } do
+      conn =
+        get(
+          conn,
+          Routes.conversion_transaction_path(conn, :index, user_id, limit: :not_a_number)
+        )
+
+      assert %{"errors" => [%{"detail" => %{"limit" => ["is invalid"]}, "status" => 422}]} =
+               json_response(conn, 422)
     end
   end
 
@@ -160,9 +274,9 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
     end
   end
 
-  defp create_conversion_transactions(_) do
-    conversion_transactions = fixture(:conversion_transactions)
-    %{conversion_transactions: conversion_transactions}
+  defp create_conversion_transaction(_) do
+    conversion_transaction = fixture(:conversion_transaction)
+    %{conversion_transaction: conversion_transaction}
   end
 
   defp create_exchange_rates(_) do
@@ -170,7 +284,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
     %{exchange_rates: exchange_rates}
   end
 
-  defp fixture(:conversion_transactions) do
+  defp fixture(:conversion_transaction) do
     source_currency = Enum.random(config_worker(:supported_currencies))
     random_decimal = Decimal.new(to_string(:rand.uniform()))
 

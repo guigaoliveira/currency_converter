@@ -8,7 +8,7 @@ defmodule CurrencyConverter.Utils.DataManipulation do
   @doc """
   Apply operations (pagination, filters and sorting) to query
   """
-  @spec apply_operations(Ecto.Query.t(), Enumerable.t()) :: Ecto.Query.t()
+  @spec apply_operations(Ecto.Query.t(), map) :: Ecto.Query.t()
   def apply_operations(query, operations) do
     Enum.reduce(operations, query, fn {operation, value}, query ->
       apply_operations(query, to_atom(operation), value)
@@ -17,6 +17,8 @@ defmodule CurrencyConverter.Utils.DataManipulation do
 
   defp to_atom(value) when is_binary(value), do: String.to_existing_atom(value)
   defp to_atom(value), do: value
+
+  defp apply_operations(query, _, nil), do: query
 
   defp apply_operations(query, :inserted_at, datetime),
     do: where(query, [j], j.inserted_at >= ^datetime)
@@ -36,6 +38,5 @@ defmodule CurrencyConverter.Utils.DataManipulation do
 
   defp apply_operations(query, :sort, sort), do: order_by(query, ^sort)
 
-  defp apply_operations(query, _, nil), do: query
   defp apply_operations(query, _, _), do: query
 end

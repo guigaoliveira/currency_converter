@@ -10,20 +10,21 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
   List all conversion transactions by user id
   """
   def index(conn, params) do
-    with %{valid?: true, changes: params} <-
-           ConversionTransactionInput.validate_index(params) do
+    with {:ok, params} <-
+           ConversionTransactionInput.cast_and_validate_index(params) do
       conversion_transactions = ConversionTransactions.all_by_user(params)
 
       render(conn, "index.json", conversion_transactions: conversion_transactions)
     end
   end
 
+  @spec create(any, %{optional(:__struct__) => none, optional(atom | binary) => any}) :: any
   @doc """
   Creates a new conversion transaction
   """
   def create(conn, params) do
-    with %{valid?: true, changes: params} <-
-           ConversionTransactionInput.validate_create(params),
+    with {:ok, params} <-
+           ConversionTransactionInput.cast_and_validate_create(params),
          {:ok, %{total: target_value, cross_rate: exchange_rate}} <-
            CurrencyConverter.convert(
              params.source_value,
