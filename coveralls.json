@@ -4,6 +4,7 @@
     "deps",
     "lib/currency_converter_web.ex",
     "lib/currency_converter_web/endpoint.ex",
+    "lib/currency_converter_web/telemetry.ex",
     "lib/currency_converter/repo.ex"
   ]
 }
