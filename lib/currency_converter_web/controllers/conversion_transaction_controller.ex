@@ -18,7 +18,6 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
     end
   end
 
-  @spec create(any, %{optional(:__struct__) => none, optional(atom | binary) => any}) :: any
   @doc """
   Creates a new conversion transaction
   """

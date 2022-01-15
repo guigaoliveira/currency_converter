@@ -7,10 +7,12 @@ defmodule CurrencyConverter.Utils.EctoTypes.SortType do
 
   @supported_directions ~w(asc desc)
 
-  @impl true
+  @impl Ecto.Type
+  @spec type :: :sort
   def type, do: :sort
 
-  @impl true
+  @impl Ecto.Type
+  @spec cast(any) :: :error | {:ok, [binary, ...]}
   def cast(sort) when is_binary(sort) do
     with {:ok, [field, order]} when is_binary(field) and is_binary(order) <- Jason.decode(sort),
          true <- order in @supported_directions do
@@ -22,10 +24,11 @@ defmodule CurrencyConverter.Utils.EctoTypes.SortType do
 
   def cast(_), do: :error
 
-  @impl true
+  @impl Ecto.Type
   def load(data), do: data
 
-  @impl true
+  @impl Ecto.Type
+  @spec dump(any) :: :error | {:ok, [binary, ...]}
   def dump([field, order] = s) when is_binary(field) and is_binary(order), do: {:ok, s}
   def dump(_), do: :error
 end

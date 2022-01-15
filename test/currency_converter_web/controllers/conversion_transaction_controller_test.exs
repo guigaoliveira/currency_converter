@@ -1,7 +1,8 @@
 defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   use CurrencyConverterWeb.ConnCase
 
-  alias CurrencyConverter.{ConversionTransactions, ExchangeRates}
+  alias CurrencyConverter.ConversionTransactions
+  alias CurrencyConverter.ExchangeRates
   alias CurrencyConverterWeb.Router.Helpers, as: Routes
 
   setup do
@@ -311,7 +312,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   end
 
   defp config_worker(key) do
-    Application.fetch_env!(:currency_converter, CurrencyConverter.ExchangeRatesWorker)
+    :currency_converter
+    |> Application.fetch_env!(CurrencyConverter.ExchangeRatesWorker)
     |> Keyword.fetch!(key)
   end
 end

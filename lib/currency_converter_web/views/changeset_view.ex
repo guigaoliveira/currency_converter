@@ -6,6 +6,7 @@ defmodule CurrencyConverterWeb.ChangesetView do
   See `Ecto.Changeset.traverse_errors/2` and
   `TuiterWeb.ErrorHelpers.translate_error/1` for more details.
   """
+  @spec translate_errors(Ecto.Changeset.t()) :: %{optional(atom) => list}
   def translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
   end

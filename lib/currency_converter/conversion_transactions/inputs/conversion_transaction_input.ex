@@ -94,7 +94,8 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
   end
 
   defp config_worker(key) do
-    Application.fetch_env!(:currency_converter, CurrencyConverter.ExchangeRatesWorker)
+    :currency_converter
+    |> Application.fetch_env!(CurrencyConverter.ExchangeRatesWorker)
     |> Keyword.fetch!(key)
   end
 end

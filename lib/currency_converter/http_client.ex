@@ -81,6 +81,6 @@ defmodule CurrencyConverter.HTTPClient do
   defp parse_result({:error, _reason} = err), do: err
 
   defp config(key) do
-    Application.fetch_env!(:currency_converter, __MODULE__) |> Keyword.fetch!(key)
+    :currency_converter |> Application.fetch_env!(__MODULE__) |> Keyword.fetch!(key)
   end
 end

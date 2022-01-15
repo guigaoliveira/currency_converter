@@ -7,7 +7,8 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
     queue: :exchange_rates,
     max_attempts: 1
 
-  alias CurrencyConverter.{ExchangeRates, HTTPClient}
+  alias CurrencyConverter.ExchangeRates
+  alias CurrencyConverter.HTTPClient
 
   require Logger
 
@@ -52,6 +53,6 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
   defp parse_result(_body), do: {:error, :exchange_api_schema_changed}
 
   defp config(key) do
-    Application.fetch_env!(:currency_converter, __MODULE__) |> Keyword.fetch!(key)
+    :currency_converter |> Application.fetch_env!(__MODULE__) |> Keyword.fetch!(key)
   end
 end

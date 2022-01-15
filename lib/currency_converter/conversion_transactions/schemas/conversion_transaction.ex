@@ -27,7 +27,7 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
     timestamps(type: :utc_datetime_usec)
   end
 
-  @doc false
+  @spec changeset(Ecto.Schema.t() | Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
   def changeset(struct_or_changeset \\ %__MODULE__{}, params) do
     struct_or_changeset
     |> cast(params, @required)

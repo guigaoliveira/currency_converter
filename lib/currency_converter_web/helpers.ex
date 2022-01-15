@@ -7,6 +7,7 @@ defmodule CurrencyConverterWeb.Helpers do
   import Phoenix.Controller, only: [put_view: 2, render: 3]
   alias Plug.Conn.Status
 
+  @spec create_error_view(Plug.Conn.t(), atom | integer, any) :: Plug.Conn.t()
   def create_error_view(conn, status, detail) do
     status_code = Status.code(status)
 

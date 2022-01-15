@@ -1,7 +1,8 @@
 defmodule CurrencyConverter.ExchangeRatesWorkerTest do
   use CurrencyConverter.DataCase
 
-  alias CurrencyConverter.{ExchangeRates, ExchangeRatesWorker}
+  alias CurrencyConverter.ExchangeRates
+  alias CurrencyConverter.ExchangeRatesWorker
 
   @moduletag :capture_log
 
@@ -76,6 +77,6 @@ defmodule CurrencyConverter.ExchangeRatesWorkerTest do
   end
 
   defp config_worker(key) do
-    Application.fetch_env!(:currency_converter, ExchangeRatesWorker) |> Keyword.fetch!(key)
+    :currency_converter |> Application.fetch_env!(ExchangeRatesWorker) |> Keyword.fetch!(key)
   end
 end
