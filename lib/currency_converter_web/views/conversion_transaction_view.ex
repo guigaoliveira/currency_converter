@@ -25,8 +25,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionView do
       :user_id,
       :source_currency,
       :target_currency,
-      :source_value,
-      :target_value,
+      :source_money,
+      :target_money,
       :exchange_rate,
       :updated_at,
       :inserted_at

@@ -6,7 +6,7 @@ defmodule CurrencyConverter do
   alias CurrencyConverter.ExchangeRates
 
   @spec convert(Decimal.decimal(), String.t(), String.t()) ::
-          {:ok, %{cross_rate: Decimal.t(), total: Money.t()}}
+          {:ok, %{cross_rate: Decimal.t(), target_money: Money.t()}}
   def convert(
         value,
         source_currency,
@@ -24,7 +24,7 @@ defmodule CurrencyConverter do
 
       total = value |> Decimal.new() |> Decimal.mult(cross_rate)
 
-      {:ok, %{total: Money.new!(target_currency, total), cross_rate: cross_rate}}
+      {:ok, %{target_money: Money.new!(target_currency, total), cross_rate: cross_rate}}
     end
   end
 end

@@ -15,7 +15,7 @@ defmodule CurrencyConverter.Utils.EctoTypes.SortTypeTest do
   end
 
   test "load/1" do
-    assert SortType.load("data") == "data"
+    assert SortType.load("data") == {:ok, "data"}
   end
 
   test "dump/1" do

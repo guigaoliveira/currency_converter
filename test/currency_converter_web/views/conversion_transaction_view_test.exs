@@ -14,7 +14,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionViewTest do
       user_id: Ecto.UUID.generate(),
       source_currency: source_currency,
       target_currency: Enum.random(["BRL", "USD", "EUR", "JPY"]),
-      source_value: Money.new!(Enum.random(1..10), source_currency),
+      source_money: Money.new!(Enum.random(1..10), source_currency),
       exchange_rate: Decimal.new(to_string(:rand.uniform())),
       updated_at: DateTime.utc_now(),
       inserted_at: DateTime.utc_now()
@@ -27,7 +27,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionViewTest do
       user_id: user_id,
       source_currency: source_currency,
       target_currency: target_currency,
-      source_value: source_value,
+      source_money: source_money,
       exchange_rate: exchange_rate,
       updated_at: updated_at,
       inserted_at: inserted_at
@@ -40,7 +40,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionViewTest do
                  user_id: ^user_id,
                  source_currency: ^source_currency,
                  target_currency: ^target_currency,
-                 source_value: ^source_value,
+                 source_money: ^source_money,
                  exchange_rate: ^exchange_rate,
                  updated_at: ^updated_at,
                  inserted_at: ^inserted_at
@@ -61,8 +61,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionViewTest do
       user_id: Ecto.UUID.generate(),
       source_currency: source_currency,
       target_currency: target_currency,
-      source_value: Money.new!(Enum.random(1..10), source_currency),
-      target_value: Money.new!(Enum.random(1..10), target_currency),
+      source_money: Money.new!(Enum.random(1..10), source_currency),
+      target_money: Money.new!(Enum.random(1..10), target_currency),
       exchange_rate: Decimal.new(to_string(:rand.uniform())),
       updated_at: DateTime.utc_now(),
       inserted_at: DateTime.utc_now()
@@ -73,8 +73,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionViewTest do
       user_id: user_id,
       source_currency: source_currency,
       target_currency: target_currency,
-      source_value: source_value,
-      target_value: target_value,
+      source_money: source_money,
+      target_money: target_money,
       exchange_rate: exchange_rate,
       updated_at: updated_at,
       inserted_at: inserted_at
@@ -86,8 +86,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionViewTest do
                user_id: ^user_id,
                source_currency: ^source_currency,
                target_currency: ^target_currency,
-               source_value: ^source_value,
-               target_value: ^target_value,
+               source_money: ^source_money,
+               target_money: ^target_money,
                exchange_rate: ^exchange_rate,
                updated_at: ^updated_at,
                inserted_at: ^inserted_at

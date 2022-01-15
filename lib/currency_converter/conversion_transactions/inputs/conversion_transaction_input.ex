@@ -14,7 +14,7 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
     field :user_id, :binary
     field :source_currency, :string
     field :target_currency, :string
-    field :source_value, :decimal
+    field :source_amount, :decimal
 
     # pagination
     field :offset, :integer, default: 0
@@ -55,7 +55,7 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
       :user_id,
       :source_currency,
       :target_currency,
-      :source_value
+      :source_amount
     ]
 
     struct_or_changeset

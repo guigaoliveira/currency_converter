@@ -10,10 +10,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
   List all conversion transactions by user id
   """
   def index(conn, params) do
-    with {:ok, params} <-
-           ConversionTransactionInput.cast_and_validate_index(params) do
+    with {:ok, params} <- ConversionTransactionInput.cast_and_validate_index(params) do
       conversion_transactions = ConversionTransactions.all_by_user(params)
-
       render(conn, "index.json", conversion_transactions: conversion_transactions)
     end
   end
@@ -22,29 +20,27 @@ defmodule CurrencyConverterWeb.ConversionTransactionController do
   Creates a new conversion transaction
   """
   def create(conn, params) do
-    with {:ok, params} <-
+    with {:ok,
+          %{
+            source_amount: source_amount,
+            source_currency: source_currency,
+            target_currency: target_currency
+          } = params} <-
            ConversionTransactionInput.cast_and_validate_create(params),
-         {:ok, %{total: target_value, cross_rate: exchange_rate}} <-
-           CurrencyConverter.convert(
-             params.source_value,
-             params.source_currency,
-             params.target_currency
-           ),
-         source_value <- Money.new!(params.source_currency, params.source_value),
+         {:ok, %{target_money: target_money, cross_rate: exchange_rate}} <-
+           CurrencyConverter.convert(source_amount, source_currency, target_currency),
+         source_money <- Money.new!(source_currency, source_amount),
          {:ok, conversion_transaction} <-
            params
-           |> Map.merge(%{
-             exchange_rate: exchange_rate,
-             source_value: source_value
-           })
+           |> Map.merge(%{exchange_rate: exchange_rate, source_money: source_money})
            |> ConversionTransactions.create() do
-      render(conn, "create.json",
-        conversion_transaction:
-          Map.merge(
-            conversion_transaction,
-            %{target_value: target_value, source_value: source_value}
-          )
-      )
+      conversion_transaction =
+        Map.merge(conversion_transaction, %{
+          target_money: target_money,
+          source_money: source_money
+        })
+
+      render(conn, "create.json", conversion_transaction: conversion_transaction)
     else
       {:error, :unavailable_rates} ->
         {:error, 500,

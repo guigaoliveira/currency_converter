@@ -13,7 +13,7 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
     :user_id,
     :source_currency,
     :target_currency,
-    :source_value,
+    :source_money,
     :exchange_rate
   ]
 
@@ -21,7 +21,7 @@ defmodule CurrencyConverter.ConversionTransactions.Schemas.ConversionTransaction
     field :user_id, Ecto.UUID
     field :source_currency, :string
     field :target_currency, :string
-    field :source_value, Money.Ecto.Composite.Type
+    field :source_money, Money.Ecto.Composite.Type
     field :exchange_rate, :decimal
 
     timestamps(type: :utc_datetime_usec)

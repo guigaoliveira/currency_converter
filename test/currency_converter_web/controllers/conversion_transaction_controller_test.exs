@@ -20,13 +20,13 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
         user_id: user_id,
         source_currency: source_currency,
         target_currency: target_currency,
-        source_value: source_value,
+        source_money: source_money,
         exchange_rate: exchange_rate,
         inserted_at: inserted_at
       }
     } do
       exchange_rate_string = Decimal.to_string(exchange_rate)
-      source_value_amount = Decimal.to_string(Money.to_decimal(source_value))
+      source_amount = Decimal.to_string(Money.to_decimal(source_money))
 
       conn =
         get(
@@ -48,8 +48,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
                    "user_id" => ^user_id,
                    "source_currency" => ^source_currency,
                    "target_currency" => ^target_currency,
-                   "source_value" => %{
-                     "amount" => ^source_value_amount,
+                   "source_money" => %{
+                     "amount" => ^source_amount,
                      "currency" => ^source_currency
                    },
                    "exchange_rate" => ^exchange_rate_string,
@@ -202,14 +202,14 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
         user_id: Ecto.UUID.generate(),
         source_currency: Enum.random(config(:supported_currencies)),
         target_currency: Enum.random(config(:supported_currencies)),
-        source_value: Decimal.new(to_string(:rand.uniform()))
+        source_amount: Decimal.new(to_string(:rand.uniform()))
       }
 
       %{
         user_id: user_id,
         source_currency: source_currency,
         target_currency: target_currency,
-        source_value: source_value
+        source_amount: source_amount
       } = params
 
       conn =
@@ -219,7 +219,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
           params
         )
 
-      source_value_amount = to_string(source_value)
+      source_amount = to_string(source_amount)
 
       assert %{
                "data" => %{
@@ -227,12 +227,12 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
                  "user_id" => ^user_id,
                  "source_currency" => ^source_currency,
                  "target_currency" => ^target_currency,
-                 "source_value" => %{
-                   "amount" => ^source_value_amount,
+                 "source_money" => %{
+                   "amount" => ^source_amount,
                    "currency" => ^source_currency
                  },
-                 "target_value" => %{
-                   "amount" => _target_value_amount,
+                 "target_money" => %{
+                   "amount" => _target_amount,
                    "currency" => ^target_currency
                  },
                  "exchange_rate" => _exchange_rate,
@@ -252,7 +252,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
         user_id: Ecto.UUID.generate(),
         source_currency: Enum.random(config(:supported_currencies)),
         target_currency: Enum.random(config(:supported_currencies)),
-        source_value: Decimal.new(to_string(:rand.uniform()))
+        source_amount: Decimal.new(to_string(:rand.uniform()))
       }
 
       conn =
@@ -294,7 +294,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
         user_id: Ecto.UUID.generate(),
         source_currency: source_currency,
         target_currency: Enum.random(config(:supported_currencies)),
-        source_value: Money.new!(random_decimal, source_currency),
+        source_money: Money.new!(random_decimal, source_currency),
         exchange_rate: random_decimal
       })
 

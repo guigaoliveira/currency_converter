@@ -6,7 +6,7 @@ defmodule CurrencyConverter.Utils.DataManipulation do
   import Ecto.Query, warn: false
 
   @doc """
-  Apply operations (pagination, filters and sorting) to query
+  Apply data operations (pagination, filters and sorting) to query
   """
   @spec apply_operations(Ecto.Query.t(), map) :: Ecto.Query.t()
   def apply_operations(query, operations) do

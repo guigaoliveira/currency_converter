@@ -73,7 +73,7 @@ Resources related to conversion transactions in the API.
                     "JPY"
                     ]
                 },
-                "source_value": {
+                "source_amount": {
                   "type": "string"
                 }
               },
@@ -81,7 +81,7 @@ Resources related to conversion transactions in the API.
                 "user_id",
                 "source_currency",
                 "target_currency",
-                "source_value"
+                "source_amount"
               ]
             }
     
@@ -106,7 +106,7 @@ Resources related to conversion transactions in the API.
 + target_currency: USD (string, required)
 
 ### ConversionTransactionRequest (ConversionTransactionCommon)
-+ source_value: 1.2 (string, required)
++ source_amount: 1.2 (string, required)
 
 ### ConversionTransactionsResponse
 + data (array[ConversionTransaction])
@@ -114,15 +114,15 @@ Resources related to conversion transactions in the API.
 ### ConversionTransactionResponse
 + data (ConversionTransactionCreate)
 
-### ConversionTransaction (ConversionTransactionRequest)
+### ConversionTransaction (ConversionTransactionCommon)
 + id: `810b43d0-fc0d-4199-8a79-25b471c880bf` (string, required)
 + exchange_rate: 5.52929 (string, required)
 + inserted_at: `2022-01-14T01:09:46.139857Z` (string, required)
 + updated_at:  `2022-01-14T01:09:46.139857Z` (string, required)
-+ source_value (Money, required)
++ source_money (Money, required)
 
 ### ConversionTransactionCreate (ConversionTransaction)
-+ target_value (Money, required) 
++ target_money (Money, required) 
 
 ### Money 
 + amount: 1.2 (string)

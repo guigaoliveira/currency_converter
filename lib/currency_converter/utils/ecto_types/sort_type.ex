@@ -25,7 +25,8 @@ defmodule CurrencyConverter.Utils.EctoTypes.SortType do
   def cast(_), do: :error
 
   @impl Ecto.Type
-  def load(data), do: data
+  @spec load(any) :: {:ok, any}
+  def load(data), do: {:ok, data}
 
   @impl Ecto.Type
   @spec dump(any) :: :error | {:ok, [binary, ...]}

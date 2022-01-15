@@ -7,7 +7,7 @@ defmodule CurrencyConverter.Repo.Migrations.CreateConversionTransactionsTable do
       add :user_id, :binary_id
       add :source_currency, :string
       add :target_currency, :string
-      add :source_value, :money_with_currency
+      add :source_money, :money_with_currency
       add :exchange_rate, :decimal
 
       timestamps(type: :utc_datetime_usec)

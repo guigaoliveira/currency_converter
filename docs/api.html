@@ -13,14 +13,14 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
       "<span class="hljs-attribute">user_id</span>": <span class="hljs-value"><span class="hljs-string">"4184f25e-cdb4-4829-9274-912389195172"</span></span>,
       "<span class="hljs-attribute">source_currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span></span>,
       "<span class="hljs-attribute">target_currency</span>": <span class="hljs-value"><span class="hljs-string">"USD"</span></span>,
-      "<span class="hljs-attribute">source_value</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">amount</span>": <span class="hljs-value"><span class="hljs-string">"1.2"</span></span>,
-        "<span class="hljs-attribute">currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span>
-      </span>}</span>,
       "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"810b43d0-fc0d-4199-8a79-25b471c880bf"</span></span>,
       "<span class="hljs-attribute">exchange_rate</span>": <span class="hljs-value"><span class="hljs-string">"5.52929"</span></span>,
       "<span class="hljs-attribute">inserted_at</span>": <span class="hljs-value"><span class="hljs-string">"2022-01-14T01:09:46.139857Z"</span></span>,
-      "<span class="hljs-attribute">updated_at</span>": <span class="hljs-value"><span class="hljs-string">"2022-01-14T01:09:46.139857Z"</span>
+      "<span class="hljs-attribute">updated_at</span>": <span class="hljs-value"><span class="hljs-string">"2022-01-14T01:09:46.139857Z"</span></span>,
+      "<span class="hljs-attribute">source_money</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">amount</span>": <span class="hljs-value"><span class="hljs-string">"1.2"</span></span>,
+        "<span class="hljs-attribute">currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span>
+      </span>}
     </span>}
   ]
 </span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
@@ -54,7 +54,7 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
   "<span class="hljs-attribute">user_id</span>": <span class="hljs-value"><span class="hljs-string">"4184f25e-cdb4-4829-9274-912389195172"</span></span>,
   "<span class="hljs-attribute">source_currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span></span>,
   "<span class="hljs-attribute">target_currency</span>": <span class="hljs-value"><span class="hljs-string">"USD"</span></span>,
-  "<span class="hljs-attribute">source_value</span>": <span class="hljs-value"><span class="hljs-string">"1.2"</span>
+  "<span class="hljs-attribute">source_amount</span>": <span class="hljs-value"><span class="hljs-string">"1.2"</span>
 </span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-07/schema#"</span></span>,
   "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -77,7 +77,7 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
         <span class="hljs-string">"JPY"</span>
       ]
     </span>}</span>,
-    "<span class="hljs-attribute">source_value</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">source_amount</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
     </span>}
   </span>}</span>,
@@ -85,22 +85,22 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
     <span class="hljs-string">"user_id"</span>,
     <span class="hljs-string">"source_currency"</span>,
     <span class="hljs-string">"target_currency"</span>,
-    <span class="hljs-string">"source_value"</span>
+    <span class="hljs-string">"source_amount"</span>
   ]
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">user_id</span>": <span class="hljs-value"><span class="hljs-string">"4184f25e-cdb4-4829-9274-912389195172"</span></span>,
     "<span class="hljs-attribute">source_currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span></span>,
     "<span class="hljs-attribute">target_currency</span>": <span class="hljs-value"><span class="hljs-string">"USD"</span></span>,
-    "<span class="hljs-attribute">source_value</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">amount</span>": <span class="hljs-value"><span class="hljs-string">"1.2"</span></span>,
-      "<span class="hljs-attribute">currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span>
-    </span>}</span>,
     "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"810b43d0-fc0d-4199-8a79-25b471c880bf"</span></span>,
     "<span class="hljs-attribute">exchange_rate</span>": <span class="hljs-value"><span class="hljs-string">"5.52929"</span></span>,
     "<span class="hljs-attribute">inserted_at</span>": <span class="hljs-value"><span class="hljs-string">"2022-01-14T01:09:46.139857Z"</span></span>,
     "<span class="hljs-attribute">updated_at</span>": <span class="hljs-value"><span class="hljs-string">"2022-01-14T01:09:46.139857Z"</span></span>,
-    "<span class="hljs-attribute">target_value</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">source_money</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">amount</span>": <span class="hljs-value"><span class="hljs-string">"1.2"</span></span>,
+      "<span class="hljs-attribute">currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">target_money</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">amount</span>": <span class="hljs-value"><span class="hljs-string">"1.2"</span></span>,
       "<span class="hljs-attribute">currency</span>": <span class="hljs-value"><span class="hljs-string">"BRL"</span>
     </span>}
@@ -121,17 +121,6 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
         "<span class="hljs-attribute">target_currency</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
         </span>}</span>,
-        "<span class="hljs-attribute">source_value</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
-          "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">amount</span>": <span class="hljs-value">{
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
-            </span>}</span>,
-            "<span class="hljs-attribute">currency</span>": <span class="hljs-value">{
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
-            </span>}
-          </span>}
-        </span>}</span>,
         "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
         </span>}</span>,
@@ -144,7 +133,18 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
         "<span class="hljs-attribute">updated_at</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
         </span>}</span>,
-        "<span class="hljs-attribute">target_value</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">source_money</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+          "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">amount</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">currency</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
+            </span>}
+          </span>}
+        </span>}</span>,
+        "<span class="hljs-attribute">target_money</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
           "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">amount</span>": <span class="hljs-value">{
@@ -160,12 +160,12 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
         <span class="hljs-string">"user_id"</span>,
         <span class="hljs-string">"source_currency"</span>,
         <span class="hljs-string">"target_currency"</span>,
-        <span class="hljs-string">"source_value"</span>,
         <span class="hljs-string">"id"</span>,
         <span class="hljs-string">"exchange_rate"</span>,
         <span class="hljs-string">"inserted_at"</span>,
         <span class="hljs-string">"updated_at"</span>,
-        <span class="hljs-string">"target_value"</span>
+        <span class="hljs-string">"source_money"</span>,
+        <span class="hljs-string">"target_money"</span>
       ]
     </span>}
   </span>}
@@ -203,7 +203,7 @@ Supported currencies: BRL, USD, EUR, JPY.</p>
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"array"</span>
     </span>}
   </span>}
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 14 Jan 2022</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 15 Jan 2022</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 
