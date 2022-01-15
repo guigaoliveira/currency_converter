@@ -14,11 +14,11 @@ defmodule CurrencyConverter.ExchangeRates do
   """
   @spec insert(map, Keyword.t()) :: {:ok, boolean} | {:error, boolean}
   def insert(rates, opts \\ []) do
-    Cachex.put(:currency_converter, "exchange_rates", rates, ttl: opts[:ttl] || @default_ttl)
-
     if opts[:persistence] do
       Cachex.dump(:currency_converter, @persistence_path)
     end
+
+    Cachex.put(:currency_converter, "exchange_rates", rates, ttl: opts[:ttl] || @default_ttl)
   end
 
   @doc """
