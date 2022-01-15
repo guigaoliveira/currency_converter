@@ -9,7 +9,8 @@ import Config
 
 config :currency_converter,
   ecto_repos: [CurrencyConverter.Repo],
-  generators: [binary_id: true]
+  generators: [binary_id: true],
+  supported_currencies: ["BRL", "USD", "EUR", "JPY"]
 
 # Configures the endpoint
 config :currency_converter, CurrencyConverterWeb.Endpoint,
@@ -43,7 +44,6 @@ config :currency_converter, CurrencyConverter.ExchangeRatesWorker,
   base_url: "http://api.exchangeratesapi.io",
   url_path: "/v1/latest",
   access_key: System.get_env("EXCHANGE_RATES_API_ACCESS_KEY"),
-  supported_currencies: ["BRL", "USD", "EUR", "JPY"],
   base_currency: "EUR",
   cache_persistence: true
 

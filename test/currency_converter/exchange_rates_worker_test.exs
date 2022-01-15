@@ -12,7 +12,7 @@ defmodule CurrencyConverter.ExchangeRatesWorkerTest do
     base_currency = config_worker(:base_currency)
 
     rates =
-      Map.new(config_worker(:supported_currencies), fn currency ->
+      Map.new(config_global(:supported_currencies), fn currency ->
         {currency, to_string(:rand.uniform())}
       end)
 
@@ -78,5 +78,9 @@ defmodule CurrencyConverter.ExchangeRatesWorkerTest do
 
   defp config_worker(key) do
     :currency_converter |> Application.fetch_env!(ExchangeRatesWorker) |> Keyword.fetch!(key)
+  end
+
+  defp config_global(key) do
+    Application.fetch_env!(:currency_converter, key)
   end
 end

@@ -200,8 +200,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
     } do
       params = %{
         user_id: Ecto.UUID.generate(),
-        source_currency: Enum.random(config_worker(:supported_currencies)),
-        target_currency: Enum.random(config_worker(:supported_currencies)),
+        source_currency: Enum.random(config(:supported_currencies)),
+        target_currency: Enum.random(config(:supported_currencies)),
         source_value: Decimal.new(to_string(:rand.uniform()))
       }
 
@@ -250,8 +250,8 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
          } do
       params = %{
         user_id: Ecto.UUID.generate(),
-        source_currency: Enum.random(config_worker(:supported_currencies)),
-        target_currency: Enum.random(config_worker(:supported_currencies)),
+        source_currency: Enum.random(config(:supported_currencies)),
+        target_currency: Enum.random(config(:supported_currencies)),
         source_value: Decimal.new(to_string(:rand.uniform()))
       }
 
@@ -286,14 +286,14 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
   end
 
   defp fixture(:conversion_transaction) do
-    source_currency = Enum.random(config_worker(:supported_currencies))
+    source_currency = Enum.random(config(:supported_currencies))
     random_decimal = Decimal.new(to_string(:rand.uniform()))
 
     {:ok, struct} =
       ConversionTransactions.create(%{
         user_id: Ecto.UUID.generate(),
         source_currency: source_currency,
-        target_currency: Enum.random(config_worker(:supported_currencies)),
+        target_currency: Enum.random(config(:supported_currencies)),
         source_value: Money.new!(random_decimal, source_currency),
         exchange_rate: random_decimal
       })
@@ -303,7 +303,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
 
   defp fixture(:exchange_rates) do
     rates =
-      Map.new(config_worker(:supported_currencies), fn currency ->
+      Map.new(config(:supported_currencies), fn currency ->
         {currency, to_string(:rand.uniform())}
       end)
 
@@ -311,9 +311,7 @@ defmodule CurrencyConverterWeb.ConversionTransactionControllerTest do
     rates
   end
 
-  defp config_worker(key) do
-    :currency_converter
-    |> Application.fetch_env!(CurrencyConverter.ExchangeRatesWorker)
-    |> Keyword.fetch!(key)
+  defp config(key) do
+    Application.fetch_env!(:currency_converter, key)
   end
 end

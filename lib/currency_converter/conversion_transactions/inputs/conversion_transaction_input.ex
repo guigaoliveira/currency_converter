@@ -79,7 +79,7 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
   defp validate_currency(%Ecto.Changeset{} = changeset, field) do
     changeset
     |> validate_length(field, max: 3)
-    |> validate_inclusion(field, config_worker(:supported_currencies))
+    |> validate_inclusion(field, config(:supported_currencies))
   end
 
   defp merge_params_and_changes_if_valid(changeset) do
@@ -93,9 +93,7 @@ defmodule CurrencyConverter.ConversionTransactions.Inputs.ConversionTransactionI
     end
   end
 
-  defp config_worker(key) do
-    :currency_converter
-    |> Application.fetch_env!(CurrencyConverter.ExchangeRatesWorker)
-    |> Keyword.fetch!(key)
+  defp config(key) do
+    Application.fetch_env!(:currency_converter, key)
   end
 end
