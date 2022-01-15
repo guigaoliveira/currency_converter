@@ -18,7 +18,7 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
     client = HTTPClient.new(url: url)
 
     Logger.info(
-      "Trying to extract exchange rates from #{inspect(url)}, attempt: #{inspect(attempt)}..."
+      "Trying to extract exchange rates from #{inspect(url)}, attempt: #{inspect(attempt)}."
     )
 
     with {:ok, %{body: body}} <-
@@ -30,14 +30,14 @@ defmodule CurrencyConverter.ExchangeRatesWorker do
                base: config_worker(:base_currency)
              ]
            ),
-         {:ok, rates} <- parse_result(body) do
-      ExchangeRates.insert(rates, persistence: config_worker(:cache_persistence))
+         {:ok, rates} <- parse_result(body),
+         {:ok, _} <- ExchangeRates.insert(rates, persistence: config_worker(:cache_persistence)) do
+      Logger.info("Success extracting exchange rates from external API and caching.")
+
       :ok
     else
       error ->
-        Logger.error(
-          "New error when try to extract exchange rates, details: #{inspect(error)}..."
-        )
+        Logger.error("New error when try to extract exchange rates, reason: #{inspect(error)}.")
 
         error
     end
